@@ -44,7 +44,7 @@
                     </div>
                     <div class="form-group">
                       <label>Fecha pago </label>
-                      <input name="fecha_paga_cuota" type="date" class="form-control form-control-lg" value="<?php echo $row->fecha_pago_cuota;?>">
+                      <input name="fecha_pago_cuota" type="date" class="form-control form-control-lg" value="<?php echo $row->fecha_pago_cuota;?>">
                     </div>
                     <div class="form-group">
                       <label>Valor pagado </label>

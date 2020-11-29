@@ -1,3 +1,11 @@
+<!--SESION-->
+<?php
+session_start();
+if(empty($_SESSION['active']))
+	{
+		header('location: ../');
+	}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,6 +17,9 @@
   <title>Gestionando</title>
   <!-- General CSS Files -->
   <link rel="stylesheet" href="../assets/css/app.min.css">
+  <link rel="stylesheet" href="../assets/bundles/datatables/datatables.min.css">
+  <link rel="stylesheet" href="../assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css">
+  
   <!-- Template CSS -->
   <link rel="stylesheet" href="../assets/css/style.css">
   <link rel="stylesheet" href="../assets/css/style2.css">
@@ -72,10 +83,18 @@
       </div>
     </div>
   </div>
+  <script src="centros/validar.js" ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+                       
   <!-- General JS Scripts -->
   <script src="../assets/js/app.min.js"></script>
   <!-- JS Libraies -->
+  <script src="../assets/bundles/datatables/datatables.min.js"></script>
+  <script src="../assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../assets/bundles/jquery-ui/jquery-ui.min.js"></script>
   <!-- Page Specific JS File -->
+  <script src="../assets/js/page/datatables.js"></script>
   <!-- Template JS File -->
   <script src="../assets/js/scripts.js"></script>
   <!-- Custom JS File -->

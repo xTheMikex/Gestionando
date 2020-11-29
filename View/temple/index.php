@@ -1,18 +1,24 @@
-<!--SESION-->
 <?php
-include("../../Controller/conexion.php");
+include("../../Controller/conexionlog.php");
 session_start();
-if (!isset($_SESSION['usuario'])){
-  header("Location: ../Login/login.php");
-}
-$iduser =$_SESSION['usuario'];
-
-$sql ="SELECT id_usuario, usuario FROM usuario WHERE usuario ='$iduser'";
-$resultado =$conexion->query($sql);
-$row = $resultado->fetch();
+if(empty($_SESSION['active']))
+	{
+		header('location: ../');
+	}
 ?>
+<!--actualizar-->
+<?php
+ if(isset($_POST['consultar']))
+ {    
+     $id  = $_POST['id'];
+     $consulta ="SELECT * FROM cotizante WHERE id_centro = '$id'";
+    $resultados =  $conexion -> query($consulta);
+    while($consulta = $resultados->fetch()){
+     $consulta=$_POST['nombre'];
+  }
+}
 
-
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,7 +52,14 @@ $row = $resultado->fetch();
                 <i data-feather="maximize"></i>
               </a></li>
             <li>
-              
+              <form class="form-inline mr-auto">
+                <div class="search-element">
+                  <input class="form-control" type="search" placeholder="Search" aria-label="Search" data-width="200">
+                  <button class="btn" type="submit">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </form>
             </li>
           </ul>
         </div>
@@ -56,16 +69,16 @@ $row = $resultado->fetch();
               class="nav-link dropdown-toggle nav-link-lg nav-link-user"> <img alt="image" src="assets/img/user.png"
                 class="user-img-radious-style"> <span class="d-sm-none d-lg-inline-block"></span></a>
             <div class="dropdown-menu dropdown-menu-right pullDown">
-              <div class="dropdown-title">Bienvenido  <span class="op-5 user-email">  
-                                            <?php
-                                             echo ($row['usuario']);
-                                            ?>
-                                        </span></div>
+              <div class="dropdown-title">Bienvenido 
+              <?php
+                 echo $_SESSION['user'].' -'.$_SESSION['rol']; 
+              ?>
+              </div>
               <a href="profile.html" class="dropdown-item has-icon"> <i class="far
 										fa-user"></i> Perfil
               </a>
                
-              <a href="../Login/cerrar.php" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
+              <a  href="../Login/cerrar.php" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
                 Cerrar
               </a>
             </div>
@@ -75,15 +88,19 @@ $row = $resultado->fetch();
       <div class="main-sidebar sidebar-style-2">
         <aside id="sidebar-wrapper">
           <div class="sidebar-brand">
-            <a href="index.php"> <img alt="image" src="../../img/xd-removebg-preview (1).png" width="180" height="60"/> 
+            <a href="index.php"> <img alt="image" src="../../img/xd-removebg-preview (1).png" width="180" height="63"/> 
                
             </a>
           </div>
+          <?php
+          if($_SESSION['rol'] == 1){
+              echo '
           <ul class="sidebar-menu">
-            <li class="menu-header">Menu</li>
+            <li class="menu-header">Menu </li>
             <li class="dropdown">
-              <a href="index.php" class="nav-link"><i class="fas fa-home"> </i><span>Inicio</span></a>
+              <a href="index.php" class="nav-link"><i class="fas fa-home"></i><span>Inicio</span></a>
             </li>
+            <li class="menu-header">Acciones</li>
             <li class="dropdown">
               <a href="centro.php" class="nav-link"><i class="fas fa-hospital"></i><span>Centro</span></a>
             </li>
@@ -94,8 +111,20 @@ $row = $resultado->fetch();
               <a href="estado.php" class="nav-link"><i class="far fa-check-circle"></i><span>Estado</span></a>
             </li>
             <li class="dropdown">
-              <a href="afiliacion.php" class="nav-link"><i class="fas fa-pen-alt"></i><span>Afiliacion</span></a>
+              <a href="afiliacion.php" class="nav-link"><i class="fas fa-pen-alt"></i><span>Afiliación</span></a>
             </li>
+            <li class="dropdown">
+              <a href="Cotizantes.php" class="nav-link"><i class="fas fa-user-circle"></i><span>Cotizante</span></a>
+              </li>
+              <li class="menu-header">Usuarios</li>
+              <li class="dropdown">
+              <a href="usuarios.php" class="nav-link"><i class="fas fa-user-friends"></i><span>Usuario</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="Citas.php" class="nav-link"><i class="fas fa-money-check-alt"></i><span>Citas</span></a>
+            </li>
+
+            <li class="menu-header">Pagos</li>
             <li class="dropdown">
               <a href="#" class="menu-toggle nav-link has-dropdown"><i
                   data-feather="dollar-sign"></i><span>Pagos</span></a>
@@ -105,16 +134,61 @@ $row = $resultado->fetch();
                 <li><a class="nav-link" href="pncumplidos.php">Pagos No cumplidos</a></li>
               </ul>
             </li>
-            <li class="dropdown">
-              <a href="cotizante.php" class="nav-link"><i class="fas fa-user-circle"></i><span>Cotizante</span></a>
+            <li class="menu-header">Ayuda</li>
               <li class="dropdown">
-              <a href="usuario.php" class="nav-link"><i class="fas fa-user-friends"></i><span>Usuario</span></a>
+              <a href="ayuda.php" class="nav-link"><i class="fas fa-laugh"></i><span>Ayuda</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="contacto.php" class="nav-link"><i class="fas fa-phone-volume"></i><span>Contacto</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="preguntas.php" class="nav-link"><i class="fas fa-question"></i><span>Preguntas Frecuentes</span></a>
             </li>
             
+          </ul>';
+          }
+          if($_SESSION['rol'] == 2){
+            echo '
+        
+            <ul class="sidebar-menu">
+            <li class="menu-header">Menu </li>
+            <li class="dropdown">
+              <a href="TempleUs/indexUs.php" class="nav-link"><i class="fas fa-home"></i><span>Inicio</span></a>
             </li>
-           
+            <li class="menu-header">Acciones</li>
+            <li class="dropdown">
+              <a href="TempleUs/centroUs.php" class="nav-link"><i class="fas fa-hospital"></i><span>Centro</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="TempleUs/administradoraUs.php" class="nav-link"><i class="fas fa-hotel"></i><span>Administradora</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="TempleUs/afiliacionUs.php" class="nav-link"><i class="fas fa-pen-alt"></i><span>Afiliación</span></a>
+            </li>
+            <li class="menu-header">Pagos</li>
+            <li class="dropdown">
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                  data-feather="dollar-sign"></i><span>Pagos</span></a>
+              <ul class="dropdown-menu">
+                <li><a class="nav-link" href="TempleUs/pagosUs.php">Pagos</a></li>
+                <li><a class="nav-link" href="TempleUs/pcumplidosUs.php">Pagos cumplidos</a></li>
+                <li><a class="nav-link" href="TempleUs/pncumplidosUs.php">Pagos No cumplidos</a></li>
+              </ul>
+            </li>
+            <li class="menu-header">Ayuda</li>
+              <li class="dropdown">
+              <a href="ayuda.php" class="nav-link"><i class="fas fa-laugh"></i><span>Ayuda</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="contacto.php" class="nav-link"><i class="fas fa-phone-volume"></i><span>Contacto</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="preguntas.php" class="nav-link"><i class="fas fa-question"></i><span>Preguntas Frecuentes</span></a>
+            </li>
             
-          </ul>
+          </ul>';
+          }
+          ?>
         </aside>
       </div>
       <!-- Main Content -->
@@ -207,14 +281,268 @@ $row = $resultado->fetch();
               </div>
             </div>
           </div>
+          
+          
+           
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Usuarios por centro de afiliación</h4>
+                  <div class="card-header-form">
+                    <form>
+                      <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <div class="input-group-btn">
+                          <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <tr>
+                        <th class="text-center">
+                          <div class="custom-checkbox custom-checkbox-table custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad"
+                              class="custom-control-input" id="checkbox-all">
+                           
+                          </div>
+                        </th>
+                        <th>Centros</th>
+                        <th>Miembros</th>
+                        <th>Comparación</th>
+                        <th>Fecha de inicio</th>
+                        <th>Fecha actual</th>
+                        <th>Prioridad</th>
+                        <th>Acción</th>
+                      </tr>
+                      <tr>
+                        <td class="p-0 text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
+                              id="checkbox-1">
+                            <label for="checkbox-1" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td>EPS</td>
+                        <td class="text-truncate">
+                          <ul class="list-unstyled order-list m-b-0 m-b-0">
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Wildan Ahdian"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="John Deo"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Sarah Smith"></li>
+                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
+                          </ul>
+                        </td>
+                        <td class="align-middle">
+                          <div class="progress-text">50%</div>
+                          <div class="progress" data-height="6">
+                            <div class="progress-bar bg-success" data-width="50%"></div>
+                          </div>
+                        </td>
+                        <td>2018-01-20</td>
+                        <td>2020-10-05</td>
+                        <td>
+                          <div class="badge badge-success">Media</div>
+                        </td>
+                        <td><a href="#" class="btn btn-outline-primary">Ver</a></td>
+                      </tr>
+                      <tr>
+                        <td class="p-0 text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
+                              id="checkbox-2">
+                            <label for="checkbox-2" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td>ARL</td>
+                        <td class="text-truncate">
+                          <ul class="list-unstyled order-list m-b-0 m-b-0">
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-1.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Wildan Ahdian"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="John Deo"></li>
+                            <li class="avatar avatar-sm"><span class="badge badge-primary">+2</span></li>
+                          </ul>
+                        </td>
+                        <td class="align-middle">
+                          <div class="progress-text">40%</div>
+                          <div class="progress" data-height="6">
+                            <div class="progress-bar bg-danger" data-width="40%"></div>
+                          </div>
+                        </td>
+                        <td>2017-07-14</td>
+                        <td>2020-10-05</td>
+                        <td>
+                          <div class="badge badge-danger">Alto</div>
+                        </td>
+                        <td><a href="#" class="btn btn-outline-primary">Ver</a></td>
+                      </tr>
+                      <tr>
+                        <td class="p-0 text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
+                              id="checkbox-3">
+                            <label for="checkbox-3" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td>CCF</td>
+                        <td class="text-truncate">
+                          <ul class="list-unstyled order-list m-b-0 m-b-0">
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Wildan Ahdian"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="John Deo"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-5.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Sarah Smith"></li>
+                            <li class="avatar avatar-sm"><span class="badge badge-primary">+3</span></li>
+                          </ul>
+                        </td>
+                        <td class="align-middle">
+                          <div class="progress-text">55%</div>
+                          <div class="progress" data-height="6">
+                            <div class="progress-bar bg-purple" data-width="55%"></div>
+                          </div>
+                        </td>
+                        <td>2019-07-25</td>
+                        <td>2020-10-05</td>
+                        <td>
+                          <div class="badge badge-info">Normal</div>
+                        </td>
+                        <td><a href="#" class="btn btn-outline-primary">Ver</a></td>
+                      </tr>
+                      <tr>
+                        <td class="p-0 text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
+                              id="checkbox-4">
+                            <label for="checkbox-4" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td>AFP</td>
+                        <td class="text-truncate">
+                          <ul class="list-unstyled order-list m-b-0 m-b-0">
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="John Deo"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Sarah Smith"></li>
+                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
+                          </ul>
+                        </td>
+                        <td class="align-middle">
+                          <div class="progress-text">70%</div>
+                          <div class="progress" data-height="6">
+                            <div class="progress-bar" data-width="70%"></div>
+                          </div>
+                        </td>
+                        <td>2018-04-15</td>
+                        <td>2020-10-05</td>
+                        <td>
+                          <div class="badge badge-success">Media</div>
+                        </td>
+                        <td><a href="#" class="btn btn-outline-primary">Ver</a></td>
+                      </tr>
+                      <tr>
+                        <td class="p-0 text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
+                              id="checkbox-5">
+                            <label for="checkbox-5" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td>En proceso</td>
+                        <td class="text-truncate">
+                          <ul class="list-unstyled order-list m-b-0 m-b-0">
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Wildan Ahdian"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="John Deo"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Sarah Smith"></li>
+                            <li class="avatar avatar-sm"><span class="badge badge-primary">+2</span></li>
+                          </ul>
+                        </td>
+                        <td class="align-middle">
+                          <div class="progress-text">45%</div>
+                          <div class="progress" data-height="6">
+                            <div class="progress-bar bg-cyan" data-width="45%"></div>
+                          </div>
+                        </td>
+                        <td>2017-02-24</td>
+                        <td>2020-10-05</td>
+                        <td>
+                          <div class="badge badge-danger">Alta</div>
+                        </td>
+                        <td><a href="#" class="btn btn-outline-primary">Ver</a></td>
+                      </tr>
+                      <tr>
+                        <td class="p-0 text-center">
+                          <div class="custom-checkbox custom-control">
+                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
+                              id="checkbox-6">
+                            <label for="checkbox-6" class="custom-control-label">&nbsp;</label>
+                          </div>
+                        </td>
+                        <td>Cancelado</td>
+                        <td class="text-truncate">
+                          <ul class="list-unstyled order-list m-b-0 m-b-0">
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Wildan Ahdian"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="John Deo"></li>
+                            <li class="team-member team-member-sm"><img class="rounded-circle"
+                                src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
+                                data-original-title="Sarah Smith"></li>
+                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
+                          </ul>
+                        </td>
+                        <td class="align-middle">
+                          <div class="progress-text">30%</div>
+                          <div class="progress" data-height="6">
+                            <div class="progress-bar bg-orange" data-width="30%"></div>
+                          </div>
+                        </td>
+                        <td>2018-01-20</td>
+                        <td>2020-10-05</td>
+                        <td>
+                          <div class="badge badge-info">Media</div>
+                        </td>
+                        <td><a href="#" class="btn btn-outline-primary">Ver</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+         
               <!-- Support tickets -->
             
         </section>
-        
       </div>
       <footer class="main-footer">
         <div class="footer-left">
-          
+          <a href="templateshub.net">Templateshub</a></a>
         </div>
         <div class="footer-right">
         </div>

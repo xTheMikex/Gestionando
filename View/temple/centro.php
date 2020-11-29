@@ -2,14 +2,10 @@
 <?php
 include("../../Controller/conexion.php");
 session_start();
-if (!isset($_SESSION['usuario'])){
-  header("Location: ../Login/login.php");
-}
-$iduser =$_SESSION['usuario'];
-
-$sql ="SELECT id_usuario, usuario FROM usuario WHERE usuario ='$iduser'";
-$resultado =$conexion->query($sql);
-$row = $resultado->fetch();
+if(empty($_SESSION['active']))
+	{
+		header('location: ../');
+	}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,7 +55,7 @@ $row = $resultado->fetch();
             <div class="dropdown-menu dropdown-menu-right pullDown">
               <div class="dropdown-title">Bienvenido  <span class="op-5 user-email">  
                                             <?php
-                                             echo ($row['usuario']);
+                                             echo $_SESSION['user'].' -'.$_SESSION['rol']; 
                                             ?>
                                         </span></div>
               <a href="profile.html" class="dropdown-item has-icon"> <i class="far
@@ -80,11 +76,15 @@ $row = $resultado->fetch();
                
             </a>
           </div>
+          <?php
+          if($_SESSION['rol'] == 1){
+              echo '
           <ul class="sidebar-menu">
-            <li class="menu-header">Menu</li>
+            <li class="menu-header">Menu </li>
             <li class="dropdown">
               <a href="index.php" class="nav-link"><i class="fas fa-home"></i><span>Inicio</span></a>
             </li>
+            <li class="menu-header">Acciones</li>
             <li class="dropdown">
               <a href="centro.php" class="nav-link"><i class="fas fa-hospital"></i><span>Centro</span></a>
             </li>
@@ -95,8 +95,20 @@ $row = $resultado->fetch();
               <a href="estado.php" class="nav-link"><i class="far fa-check-circle"></i><span>Estado</span></a>
             </li>
             <li class="dropdown">
-              <a href="afiliacion.php" class="nav-link"><i class="fas fa-pen-alt"></i><span>Afiliacion</span></a>
+              <a href="afiliacion.php" class="nav-link"><i class="fas fa-pen-alt"></i><span>Afiliación</span></a>
             </li>
+            <li class="dropdown">
+              <a href="Cotizantes.php" class="nav-link"><i class="fas fa-user-circle"></i><span>Cotizante</span></a>
+              </li>
+              <li class="menu-header">Usuarios</li>
+              <li class="dropdown">
+              <a href="usuarios.php" class="nav-link"><i class="fas fa-user-friends"></i><span>Usuario</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="Citas.php" class="nav-link"><i class="fas fa-money-check-alt"></i><span>Citas</span></a>
+            </li>
+
+            <li class="menu-header">Pagos</li>
             <li class="dropdown">
               <a href="#" class="menu-toggle nav-link has-dropdown"><i
                   data-feather="dollar-sign"></i><span>Pagos</span></a>
@@ -106,15 +118,61 @@ $row = $resultado->fetch();
                 <li><a class="nav-link" href="pncumplidos.php">Pagos No cumplidos</a></li>
               </ul>
             </li>
-            <li class="dropdown">
-              <a href="cotizante.php" class="nav-link"><i class="fas fa-user-circle"></i><span>Cotizante</span></a>
+            <li class="menu-header">Ayuda</li>
               <li class="dropdown">
-              <a href="usuario.php" class="nav-link"><i class="fas fa-user-friends"></i><span>Usuario</span></a>
+              <a href="ayuda.php" class="nav-link"><i class="fas fa-laugh"></i><span>Ayuda</span></a>
             </li>
+            <li class="dropdown">
+              <a href="contacto.php" class="nav-link"><i class="fas fa-phone-volume"></i><span>Contacto</span></a>
             </li>
-           
+            <li class="dropdown">
+              <a href="preguntas.php" class="nav-link"><i class="fas fa-question"></i><span>Preguntas Frecuentes</span></a>
+            </li>
             
-          </ul>
+          </ul>';
+          }
+          if($_SESSION['rol'] == 2){
+            echo '
+        
+            <ul class="sidebar-menu">
+            <li class="menu-header">Menu </li>
+            <li class="dropdown">
+              <a href="TempleUs/indexUs.php" class="nav-link"><i class="fas fa-home"></i><span>Inicio</span></a>
+            </li>
+            <li class="menu-header">Acciones</li>
+            <li class="dropdown">
+              <a href="TempleUs/centroUs.php" class="nav-link"><i class="fas fa-hospital"></i><span>Centro</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="TempleUs/administradoraUs.php" class="nav-link"><i class="fas fa-hotel"></i><span>Administradora</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="TempleUs/afiliacionUs.php" class="nav-link"><i class="fas fa-pen-alt"></i><span>Afiliación</span></a>
+            </li>
+            <li class="menu-header">Pagos</li>
+            <li class="dropdown">
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                  data-feather="dollar-sign"></i><span>Pagos</span></a>
+              <ul class="dropdown-menu">
+                <li><a class="nav-link" href="TempleUs/pagosUs.php">Pagos</a></li>
+                <li><a class="nav-link" href="TempleUs/pcumplidosUs.php">Pagos cumplidos</a></li>
+                <li><a class="nav-link" href="TempleUs/pncumplidosUs.php">Pagos No cumplidos</a></li>
+              </ul>
+            </li>
+            <li class="menu-header">Ayuda</li>
+              <li class="dropdown">
+              <a href="ayuda.php" class="nav-link"><i class="fas fa-laugh"></i><span>Ayuda</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="contacto.php" class="nav-link"><i class="fas fa-phone-volume"></i><span>Contacto</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="preguntas.php" class="nav-link"><i class="fas fa-question"></i><span>Preguntas Frecuentes</span></a>
+            </li>
+            
+          </ul>';
+          }
+          ?>
         </aside>
       </div>
       <!-- Main Content -->
@@ -138,7 +196,7 @@ $row = $resultado->fetch();
                     <?php
                         include("conexion/function.php");
                       ?>
-                      <table class="table table-striped table-hover" id="save-stage" style="width:100%;">
+                      <table class="table table-striped table-hover" id="tableExport" style="width:100%;">
                         <thead>
                           <tr>
                             <th>#</th>

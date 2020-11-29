@@ -17,23 +17,23 @@
 	
 	$mail->setFrom($row['email_emisor'], 'Gestionando S.A.S');//Modificar
 	
-	$sqlReceptor = "SELECT * FROM contactos";
+	$sqlReceptor = "SELECT * FROM pagos_nocumplidos";
 	$resultReceptor = $mysqli->query($sqlReceptor);
 
 	while($row_receptor = $resultReceptor->fetch_assoc()){
-		$correo_receptor = $row_receptor['email'];
+		$correo_receptor = $row_receptor['correo'];
 			$receptor = $row_receptor['nombre'];
 
 	$mail->addAddress($correo_receptor, $receptor);//Modificar
 	
 	$mail->Subject = $row['asunto'];//Modificar
-	$mail->Body = $row['cuerpo']; //Modificar
+	$mail->Body = (file_get_contents('email_template.html')); //Modificar
 	$mail->IsHTML(true);
 	
 	if($mail->send()){
 		header("location: ../pncumplidos.php");
 		} else {
-		echo 'Error';
+		echo 'Error'. $mail->ErrorInfo;
 	}
 }
 ?>
